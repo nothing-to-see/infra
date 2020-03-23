@@ -1,0 +1,47 @@
+https://www.digitalocean.com/community/tutorials/how-to-configure-the-linux-firewall-for-docker-swarm-on-centos-7
+
+Before starting, verify its status:
+
+    systemctl status firewalld
+
+It should not be running, so start it:
+
+    systemctl start firewalld
+
+Then enable it so that it starts on boot:
+
+    systemctl enable firewalld
+
+On the node that will be a Swarm manager, use the following commands to open the necessary ports:
+
+    firewall-cmd --add-port=2376/tcp --permanent
+    firewall-cmd --add-port=2377/tcp --permanent
+    firewall-cmd --add-port=7946/tcp --permanent
+    firewall-cmd --add-port=7946/udp --permanent
+    firewall-cmd --add-port=4789/udp --permanent
+
+Note: If you make a mistake and need to remove an entry, type:
+firewall-cmd --remove-port=port-number/tcp —permanent.
+
+Afterwards, reload the firewall:
+
+    firewall-cmd --reload
+
+Then restart Docker.
+
+    systemctl restart docker
+
+Then on each node that will function as a Swarm worker, execute the following commands:
+
+    firewall-cmd --add-port=2376/tcp --permanent
+    firewall-cmd --add-port=7946/tcp --permanent
+    firewall-cmd --add-port=7946/udp --permanent
+    firewall-cmd --add-port=4789/udp --permanent
+
+Afterwards, reload the firewall:
+
+    firewall-cmd --reload
+
+Then restart Docker.
+
+    systemctl restart docker
